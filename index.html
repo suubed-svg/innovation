@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Innovation — Floran &amp; Typhaine</title>
+<style>
+:root{--t:#ec4e9b;--f:#3b8ef3;--bg:#f4f5fb;--card:#fff;--txt:#1c1e2b;--mut:#8a8fa6;--line:#e6e8f2;--acc:#5b5ef0}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;font-family:-apple-system,system-ui,sans-serif}
+body{background:var(--bg);color:var(--txt);min-height:100vh;padding-bottom:40px}
+header{background:linear-gradient(135deg,#4a4ef0,#7a3df0 60%,#b93df0);padding:26px 20px 30px;border-radius:0 0 28px 28px;color:#fff}
+header h1{font-size:24px;font-weight:800}
+header .sub{opacity:.85;font-size:14px;margin-top:3px}
+.tabs{display:flex;gap:10px;padding:0 18px;margin:-22px 16px 0}
+.tab{flex:1;padding:13px;border-radius:14px;border:none;background:rgba(255,255,255,.25);color:#fff;font-size:15px;font-weight:700}
+.tab.on{background:#fff;color:var(--acc);box-shadow:0 6px 18px rgba(60,50,180,.25)}
+main{padding:18px}
+.card{background:var(--card);border-radius:18px;box-shadow:0 2px 12px rgba(30,30,80,.07);padding:18px;margin-bottom:14px}
+.lbl{font-size:12px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--mut);margin-bottom:10px}
+.seg{display:flex;gap:8px}
+.seg button{flex:1;padding:11px;border-radius:12px;border:1.5px solid var(--line);background:#fff;color:var(--mut);font-size:15px;font-weight:600}
+.seg button.on{border-color:var(--acc);color:var(--acc);background:#f0f1fe}
+#drawCard{text-align:center;background:linear-gradient(160deg,#fff,#f4f2ff)}
+.drawRow{display:flex;align-items:center;justify-content:space-between;padding:10px 4px;border-bottom:1px solid var(--line);text-align:left}
+.drawRow:last-of-type{border-bottom:none}
+.drawRow .en{font-size:16px;font-weight:700}
+.drawRow .prob{font-size:12px;color:var(--mut);font-weight:500}
+.drawRow .mark{width:26px;height:26px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;color:#fff;background:#c3c8dd;margin-left:8px;flex-shrink:0}
+.drawRow.sel .mark{background:linear-gradient(135deg,#5b5ef0,#8a3df0);box-shadow:0 3px 10px rgba(90,62,240,.35)}
+.drawRow.sel .en{color:var(--acc)}
+#comboStats{margin-top:14px;padding-top:14px;border-top:1px solid var(--line);font-size:14px}
+#comboStats .big{font-size:17px;font-weight:800;margin-bottom:6px}
+#comboStats .row{display:flex;justify-content:center;gap:18px;font-weight:600}
+#comboStats .row b{font-size:16px}
+#redraw{margin-top:12px;padding:9px 20px;border-radius:999px;border:1.5px solid var(--line);background:#fff;color:var(--mut);font-size:13px;font-weight:600}
+#vs{display:flex;gap:12px;margin-top:4px}
+.winBtn{flex:1;padding:22px 10px;border:none;border-radius:16px;color:#fff;font-size:18px;font-weight:800;box-shadow:0 6px 16px rgba(0,0,0,.13)}
+.winBtn:active{transform:scale(.96)}
+#btnT{background:linear-gradient(160deg,#f062ab,#d5387f)}
+#btnF{background:linear-gradient(160deg,#4a95f5,#256fd8)}
+#toast{position:fixed;top:18px;left:50%;transform:translateX(-50%) translateY(-90px);background:#1c1e2b;color:#fff;padding:13px 26px;border-radius:999px;font-size:15px;font-weight:700;transition:transform .3s;z-index:99}
+#toast.show{transform:translateX(-50%) translateY(0)}
+h2{font-size:17px;font-weight:800;margin:20px 0 10px}
+.gen{display:flex;gap:12px}
+.gen .g{flex:1;text-align:center;background:var(--card);border-radius:16px;padding:14px;box-shadow:0 2px 12px rgba(30,30,80,.07)}
+.gen .n{font-size:12px;font-weight:700;color:var(--mut)}
+.gen .v{font-size:30px;font-weight:900;margin:2px 0}
+.gen .d{font-size:12px;font-weight:600}
+.pT{color:var(--t)}.pF{color:var(--f)}
+table{width:100%;border-collapse:collapse;background:var(--card);border-radius:14px;overflow:hidden;box-shadow:0 2px 12px rgba(30,30,80,.07);font-size:13px}
+th,td{padding:9px 6px;text-align:center;border-bottom:1px solid var(--line)}
+th{color:var(--mut);font-size:11px;font-weight:700;text-transform:uppercase}
+td:first-child,th:first-child{text-align:left;padding-left:12px;font-weight:600}
+tr:last-child td{border-bottom:none}
+.win{font-size:11px;font-weight:700}
+.zero{color:#b9bccb}
+.hidden{display:none}
+#lastG{font-size:13px;color:var(--mut);text-align:center;margin-top:10px}
+#ioCard button{width:100%;padding:14px;border:none;border-radius:12px;font-size:15px;font-weight:800;margin-top:10px}
+#btnExport{background:linear-gradient(135deg,#5b5ef0,#8a3df0);color:#fff}
+#btnImport{background:#f0f1fe;color:var(--acc);border:1.5px solid var(--acc)}
+#ioMsg{text-align:center;font-size:13px;color:var(--mut);margin-top:10px}
+</style>
+</head>
+<body>
+<header>
+  <h1>Innovation</h1>
+  <div class="sub">Carl Chudyk · Floran <span style="color:#9cc6ff">●</span> vs <span style="color:#ffb3d8">●</span> Typhaine</div>
+</header>
+<div class="tabs">
+  <button class="tab on" id="tabPlay">🎲 Jouer</button>
+  <button class="tab" id="tabStats">🏆 Stats</button>
+  <button class="tab" id="tabIO">☁︎ Sauvegarde</button>
+</div>
+<main id="play">
+  <div class="card">
+    <div class="lbl">Édition</div>
+    <div class="seg" id="edSeg">
+      <button class="on" data-v="ultimate">Ultimate (4ᵉ éd.)</button>
+      <button data-v="vintage">Vintage (3ᵉ éd.)</button>
+    </div>
+  </div>
+  <div class="card" id="drawCard">
+    <div class="lbl">Partie proposée — tirage au sort</div>
+    <div id="drawList"></div>
+    <div id="comboStats"></div>
+    <div id="lastG"></div>
+    <button id="redraw">↻ Relancer le tirage</button>
+  </div>
+  <div class="card">
+    <div class="lbl" style="text-align:center">Qui a gagné ?</div>
+    <div id="vs">
+      <button class="winBtn" id="btnT">Typhaine</button>
+      <button class="winBtn" id="btnF">Floran</button>
+    </div>
+  </div>
+</main>
+<main id="stats" class="hidden">
+  <div class="gen">
+    <div class="g"><div class="n">Typhaine</div><div class="v pT" id="gT">0</div><div class="d" id="dT"></div></div>
+    <div class="g"><div class="n">Floran</div><div class="v pF" id="gF">0</div><div class="d" id="dF"></div></div>
+  </div>
+  <h2>Par combinaison d'extensions</h2>
+  <div class="card" style="padding:10px">
+    <div class="seg" id="edSeg2">
+      <button class="on" data-v="ultimate">Ultimate</button>
+      <button data-v="vintage">Vintage</button>
+    </div>
+  </div>
+  <div id="tableWrap"></div>
+</main>
+<main id="io" class="hidden">
+  <div class="card" id="ioCard">
+    <div class="lbl">Sauvegarde iCloud — synchronisation entre appareils</div>
+    <div style="font-size:14px;line-height:1.55;color:var(--mut)">
+      <b style="color:var(--txt)">Exporter</b> : crée le fichier <b>innovation-sauvegarde.json</b> (dans Fichiers → Téléchargements ; déplacez-le dans iCloud Drive).
+      <br><br>
+      <b style="color:var(--txt)">Importer</b> : sur l'autre appareil (iPhone de Typhaine), ouvrez l'app, touchez Importer et choisissez le fichier dans iCloud Drive. Les parties manquantes sont <b>ajoutées</b> — rien n'est écrasé, la fusion est automatique.
+    </div>
+    <button id="btnExport">⬇︎ Exporter mes scores</button>
+    <button id="btnImport">⬆︎ Importer une sauvegarde</button>
+    <input type="file" id="fileInput" accept=".json,application/json" class="hidden">
+    <div id="ioMsg"></div>
+  </div>
+</main>
+<div id="toast"></div>
+<script>
+const EXT={A:"Artéfacts",C:"Cités",E:"Échos",L:"Légendes",I:"l'Invisible"};
+const KEYS=["A","C","E","L","I"];
+const COMBOS=["A","C","E","L","I","AC","AE","AL","AI","CE","CL","CI","EL","EI","LI","ACE","ACL","ACI","AEL","AEI","ALI","CEL","CEI","CLI","ELI","ACEL","ACEI","ACLI","AELI","CELI","ACELI"];
+const PRE={
+ ultimate:{A:[7,7],C:[7,2],E:[170,153],L:[5,4],I:[0,1],AC:[1,0],AE:[1,2],AL:[0,1],CE:[1,0],CL:[1,0],CI:[0,1],EI:[1,0],LI:[1,0],ACE:[0,2],ACL:[1,0],AEL:[0,1],CEL:[0,1],CEI:[1,0],CLI:[0,1],ACEL:[1,0],ACEI:[1,2],CELI:[1,0],ACELI:[0,2]},
+ vintage:{AC:[12,10],AE:[11,13],AL:[6,10],CE:[25,24],CL:[19,12],EL:[15,11],ACE:[20,19],ACL:[15,17],AEL:[27,34],CEL:[23,18],ACEL:[41,29]}
+};
+const KEY="innovation-ft-v2";
+let S=JSON.parse(localStorage.getItem(KEY)||"null")||{games:[],last:{}};
+const $=s=>document.querySelector(s);
+let ed="ultimate",draw=null;
+function saveLocal(){localStorage.setItem(KEY,JSON.stringify(S))}
+function toast(msg){const t=$("#toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2400)}
+function comboName(c){return c?c.split("").map(x=>EXT[x]).join(" + "):"Jeu de base (aucune extension)"}
+function roll(){
+ const last=S.last[ed]||null;let c,guard=0;
+ do{c=KEYS.filter(k=>Math.random()<0.6).join("");guard++}while(last!==null&&c===last&&guard<200);
+ return c}
+function statsFor(edn,combo){
+ const p=(PRE[edn]||{})[combo]||[0,0];let t=p[0],f=p[1];
+ for(const g of S.games)if(g.ed===edn&&g.combo===combo){if(g.w==="T")t++;else f++}
+ return[t,f]}
+function renderDraw(){
+ if(!draw)draw=roll();
+ const chosen=draw.split("");
+ $("#drawList").innerHTML=KEYS.map(k=>
+  `<div class="drawRow${chosen.includes(k)?" sel":""}"><div><div class="en">${EXT[k]} <span style="color:var(--mut)">(${k})</span></div><div class="prob">3 chances sur 5</div></div><div class="mark">${chosen.includes(k)?"✓":""}</div></div>`).join("");
+ const v=statsFor(ed,draw);
+ let res;
+ if(v[0]+v[1]===0)res="<span style='color:var(--acc)'>Première partie avec cette combinaison !</span>";
+ else{const d=v[0]-v[1];
+  res=d===0?"<span class='zero'>Ils sont à égalité sur cette combinaison</span>":(d>0?`<span class='pT'>Typhaine mène (+${d})</span>`:`<span class='pF'>Floran mène (+${-d})</span>`)}
+ $("#comboStats").innerHTML=`<div class="big">${comboName(draw)}</div><div class="row"><span class="pT">Typhaine <b>${v[0]}</b></span><span class="pF">Floran <b>${v[1]}</b></span><span style="color:var(--mut)">Parties <b>${v[0]+v[1]}</b></span></div><div style="margin-top:8px;font-weight:700">${res}</div>`;
+ $("#lastG").textContent=S.last[ed]?("Tirage différent de la partie précédente ("+comboName(S.last[ed])+")."):"Première partie dans cette édition."}
+function record(winner){
+ const c=draw||roll();
+ S.games.push({ed,combo:c,w:winner,d:Date.now()});
+ S.last[ed]=c;saveLocal();draw=null;
+ toast((winner==="T"?"Typhaine":"Floran")+" +1 victoire ! ("+comboName(c)+")");
+ renderDraw();renderStats()}
+function agg(edn){
+ const a={};COMBOS.forEach(c=>a[c]=[0,0]);
+ const p=PRE[edn]||{};for(const[c,v]of Object.entries(p)){a[c][0]+=v[0];a[c][1]+=v[1]}
+ for(const g of S.games)if(g.ed===edn)a[g.combo][g.w==="T"?0:1]++;
+ return a}
+function renderStats(){
+ let t=0,f=0;
+ for(const edn of["ultimate","vintage"]){const a=agg(edn);for(const c of COMBOS){t+=a[c][0];f+=a[c][1]}}
+ $("#gT").textContent=t;$("#gF").textContent=f;
+ const d=t-f;
+ $("#dT").textContent=d>0?("+"+d+" d'avance"):d<0?(d+" d'avance"):"Égalité parfaite";
+ $("#dF").textContent=d<0?("+"+(-d)+" d'avance"):d>0?(d+" d'avance"):"Égalité parfaite";
+ const onB=$("#edSeg2 .on"),edn=onB?onB.dataset.v:ed,a=agg(edn);
+ let html="<table><tr><th>Combinaison</th><th class='pT'>Typh.</th><th class='pF'>Floran</th><th>Parties</th><th>Mène</th></tr>";
+ let shown=0;
+ for(const c of COMBOS){const v=a[c];if(v[0]+v[1]===0)continue;shown++;
+  const dd=v[0]-v[1];
+  const res=dd===0?"<span class='zero'>Égalité</span>":(dd>0?`<span class='win pT'>Typhaine (+${dd})</span>`:`<span class='win pF'>Floran (+${-dd})</span>`);
+  html+=`<tr><td>${comboName(c)}</td><td class='pT'>${v[0]}</td><td class='pF'>${v[1]}</td><td>${v[0]+v[1]}</td><td>${res}</td></tr>`}
+ html+="</table>";
+ $("#tableWrap").innerHTML=shown?html:"<div class='card' style='text-align:center;color:var(--mut)'>Aucune partie dans cette édition.</div>"}
+function showTab(id){
+ ["play","stats","io"].forEach(x=>$("#"+x).classList.toggle("hidden",x!==id));
+ ["tabPlay","tabStats","tabIO"].forEach(x=>$("#"+x).classList.remove("on"));
+ $({play:"#tabPlay",stats:"#tabStats",io:"#tabIO"}[id]).classList.add("on");
+ if(id==="stats")renderStats()}
+$("#tabPlay").onclick=()=>showTab("play");
+$("#tabStats").onclick=()=>showTab("stats");
+$("#tabIO").onclick=()=>showTab("io");
+$("#edSeg").onclick=e=>{const b=e.target.closest("button");if(!b)return;ed=b.dataset.v;
+ document.querySelectorAll("#edSeg button").forEach(x=>x.classList.toggle("on",x===b));draw=null;renderDraw()};
+$("#edSeg2").onclick=e=>{const b=e.target.closest("button");if(!b)return;
+ document.querySelectorAll("#edSeg2 button").forEach(x=>x.classList.toggle("on",x===b));renderStats()};
+$("#redraw").onclick=()=>{draw=null;renderDraw()};
+$("#btnT").onclick=()=>record("T");
+$("#btnF").onclick=()=>record("F");
+$("#btnExport").onclick=()=>{
+ const blob=new Blob([JSON.stringify(S)],{type:"application/json"});
+ const a=document.createElement("a");
+ a.href=URL.createObjectURL(blob);
+ a.download="innovation-sauvegarde.json";
+ document.body.appendChild(a);a.click();a.remove();
+ $("#ioMsg").textContent="✓ Fichier créé dans Téléchargements — déplacez-le dans iCloud Drive puis importez-le sur l'autre appareil."};
+$("#btnImport").onclick=()=>$("#fileInput").click();
+$("#fileInput").onchange=e=>{
+ const file=e.target.files[0];if(!file)return;
+ const r=new FileReader();
+ r.onload=()=>{
+  try{const d=JSON.parse(r.result);
+   if(!d||!Array.isArray(d.games))throw 0;
+   const ids=new Set(S.games.map(g=>g.d+"|"+g.ed+"|"+g.combo+"|"+g.w));
+   let added=0;
+   for(const g of d.games){const id=g.d+"|"+g.ed+"|"+g.combo+"|"+g.w;
+    if(!ids.has(id)){S.games.push(g);ids.add(id);added++}}
+   if(d.last)for(const k of Object.keys(d.last))if(!S.last[k])S.last[k]=d.last[k];
+   saveLocal();renderDraw();renderStats();
+   $("#ioMsg").textContent=added?("✓ Fusion réussie : "+added+" partie(s) ajoutée(s)."):"✓ Déjà à jour : aucune nouvelle partie."}
+  catch(err){$("#ioMsg").textContent="✗ Fichier invalide."}};
+ r.readAsText(file);
+ e.target.value=""};
+renderDraw();renderStats();
+</script>
+</body>
+</html>
