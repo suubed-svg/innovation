@@ -209,10 +209,10 @@ tr.totalRow td{font-weight:800;background:#efe4c4;font-size:13px}
   </div>
   <h2>Par combinaison d'extensions — Ultimate &amp; Vintage</h2>
   <div id="tableWrap"></div>
-  <h2>Évolution des scores</h2>
+  <h2>Écart entre les joueurs</h2>
   <div class="card" id="curveCard">
     <div id="curveSvgWrap"></div>
-    <div class="curveLeg"><div class="li"><span class="sw" style="background:#d5387f"></span>Typhaine</div><div class="li"><span class="sw" style="background:#2f6fd8"></span>Floran</div></div>
+    <div class="curveLeg"><div class="li"><span class="sw" style="background:#d5387f"></span>↑ Typhaine gagne</div><div class="li"><span class="sw" style="background:#2f6fd8"></span>↓ Floran gagne</div><div class="li"><span class="sw" style="background:#3b2f6e;opacity:.55"></span>= égalité</div></div>
     <div id="curveNote" style="font-size:11.5px;color:var(--mut);text-align:center;margin-top:6px"></div>
   </div>
   <h2>Part des extensions jouées</h2>
@@ -443,37 +443,48 @@ function renderExtPie(){
  $("#extPie").style.background=`conic-gradient(${parts.join(",")})`;
  $("#extLegend").innerHTML=leg}
 function renderCurve(){
- // Base historique (tableur) puis chaque partie notée dans l'app
+ // Courbe unique de l'ecart Typhaine - Floran : segment rose vers le haut quand Typhaine gagne, bleu vers le bas quand Floran gagne
  let t0=0,f0=0;
  for(const edn of ["ultimate","vintage"])for(const[c,v]of Object.entries(PRE[edn]||{})){t0+=v[0];f0+=v[1]}
  const gs=S.games.slice().sort((a,b)=>a.d-b.d);
- const pts=[{x:0,t:t0,f:f0}];
- let t=t0,f=f0;
- for(const g of gs){if(g.w==="T")t++;else f++;pts.push({x:pts.length,t,f})}
- const W=340,H=200,L=34,R=8,T=10,B=22;
+ let gap=t0-f0;
+ const pts=[{x:0,g:gap}];
+ for(const g of gs){gap+=g.w==="T"?1:-1;pts.push({x:pts.length,g:gap,w:g.w})}
+ const W=340,H=210,L=36,R=10,T=12,B=22;
  const n=pts[pts.length-1].x;
- const minV=Math.min(370,t0,f0,t,f)-2;
- const maxV=Math.max(t0,f0,t,f)+2;
+ let minV=Math.min(...pts.map(p=>p.g)),maxV=Math.max(...pts.map(p=>p.g));
+ if(minV===maxV){minV-=1;maxV+=1}
+ const pad=(maxV-minV)*0.15;minV-=pad;maxV+=pad;
+ // echelle adaptative : pas de grille arrondi selon l'amplitude
+ const span=maxV-minV;
+ const rawStep=span/5;
+ const mag=Math.pow(10,Math.floor(Math.log10(rawStep)));
+ const step=[1,2,2.5,5,10].map(m=>m*mag).find(s=>s>=rawStep)||mag*10;
  const X=i=>L+(i/Math.max(1,n))*(W-L-R);
  const Y=v=>H-B-((v-minV)/(maxV-minV))*(H-B-T);
  let grid="";
- for(let v=Math.ceil(minV/5)*5;v<=maxV;v+=5){grid+=`<line x1="${L}" y1="${Y(v)}" x2="${W-R}" y2="${Y(v)}" stroke="#d8cbab" stroke-width="1"/><text x="${L-5}" y="${Y(v)+3}" font-size="9" fill="#7a6a52" text-anchor="end">${v}</text>`}
- const line=(key,col)=>{
-  const d=pts.map((p,i)=>(i?"L":"M")+X(p.x).toFixed(1)+" "+Y(p[key]).toFixed(1)).join(" ");
-  return `<path d="${d}" fill="none" stroke="${col}" stroke-width="2.5" stroke-linejoin="round"/>`};
- const area=(key,col)=>{
-  if(pts.length<2)return "";
-  const d=pts.map((p,i)=>(i?"L":"M")+X(p.x).toFixed(1)+" "+Y(p[key]).toFixed(1)).join(" ");
-  return `<path d="${d} L${X(pts[pts.length-1].x).toFixed(1)} ${Y(minV)} L${X(0)} ${Y(minV)} Z" fill="${col}" opacity="0.10"/>`};
+ for(let v=Math.ceil(minV/step)*step;v<=maxV;v+=step){
+  grid+=`<line x1="${L}" y1="${Y(v).toFixed(1)}" x2="${W-R}" y2="${Y(v).toFixed(1)}" stroke="#d8cbab" stroke-width="1"/><text x="${L-5}" y="${(Y(v)+3).toFixed(1)}" font-size="9" fill="#7a6a52" text-anchor="end">${Math.round(v*10)/10}</text>`}
+ // ligne zero (egalite) mise en evidence si visible
+ let zero="";
+ if(0>=minV&&0<=maxV)zero=`<line x1="${L}" y1="${Y(0).toFixed(1)}" x2="${W-R}" y2="${Y(0).toFixed(1)}" stroke="#3b2f6e" stroke-width="1.5" stroke-dasharray="5 4" opacity="0.55"/>`;
+ // segments colores par gagnant
+ let segs="";
+ for(let i=1;i<pts.length;i++){
+  const a=pts[i-1],b=pts[i];
+  const col=b.w==="T"?"#d5387f":"#2f6fd8";
+  segs+=`<line x1="${X(a.x).toFixed(1)}" y1="${Y(a.g).toFixed(1)}" x2="${X(b.x).toFixed(1)}" y2="${Y(b.g).toFixed(1)}" stroke="${col}" stroke-width="2.6" stroke-linecap="round"/>`}
+ let dots=pts.slice(1).map(p=>`<circle cx="${X(p.x).toFixed(1)}" cy="${Y(p.g).toFixed(1)}" r="2.6" fill="${p.w==="T"?"#d5387f":"#2f6fd8"}"/>`).join("");
+ const lastP=pts[pts.length-1];
+ const endDot=`<circle cx="${X(lastP.x).toFixed(1)}" cy="${Y(lastP.g).toFixed(1)}" r="4.5" fill="${lastP.g>=0?"#d5387f":"#2f6fd8"}" stroke="#fffdf6" stroke-width="1.5"/>`;
  $("#curveSvgWrap").innerHTML=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block">${grid}
   <line x1="${L}" y1="${H-B}" x2="${W-R}" y2="${H-B}" stroke="#b9a67d" stroke-width="1.5"/>
-  ${area("t","#d5387f")}${area("f","#2f6fd8")}
-  ${line("t","#d5387f")}${line("f","#2f6fd8")}
-  <circle cx="${X(0)}" cy="${Y(t0)}" r="4" fill="#d5387f"/><circle cx="${X(0)}" cy="${Y(f0)}" r="4" fill="#2f6fd8"/>
-  ${pts.slice(1).map(p=>`<circle cx="${X(p.x).toFixed(1)}" cy="${Y(p.t).toFixed(1)}" r="2.6" fill="#d5387f"/>`).join("")}
-  ${pts.slice(1).map(p=>`<circle cx="${X(p.x).toFixed(1)}" cy="${Y(p.f).toFixed(1)}" r="2.6" fill="#2f6fd8"/>`).join("")}
+  ${zero}${segs}${dots}${endDot}
+  <text x="${W-R}" y="${H-6}" font-size="9" fill="#7a6a52" text-anchor="end">parties →</text>
  </svg>`;
- $("#curveNote").textContent=gs.length?("Départ = historique du tableur ("+t0+" / "+f0+"), puis chaque partie enregistrée (•). Chaque courbe monte quand son joueur gagne."):"Départ = historique du tableur ("+t0+" / "+f0+"). La courbe évoluera à chaque nouvelle partie enregistrée."}
+ const cur=lastP.g;
+ const mene=cur===0?"Égalité parfaite":(cur>0?"Typhaine mène de "+cur:"Floran mène de "+(-cur));
+ $("#curveNote").textContent=(gs.length?("Écart Typhaine − Floran, départ = historique du tableur ("+(t0-f0>=0?"+":"")+(t0-f0)+"). Actuellement : "+mene+". Rose = victoire Typhaine, bleu = victoire Floran."):"Écart Typhaine − Floran, départ = historique du tableur ("+(t0-f0>=0?"+":"")+(t0-f0)+"). La courbe évoluera à chaque nouvelle partie enregistrée.")}
 function renderStats(){
  const au=agg("ultimate"),av=agg("vintage");
  const bb=baseCount();
@@ -584,6 +595,6 @@ function refreshAll(){renderDraw();renderStats();renderHist();renderExtPie();ren
  document.getElementById("gateIn").addEventListener("keydown",function(e){if(e.key==="Enter")tryCode()});
 })();
 </script>
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4bc70e2c01a94c73b74392e4234840661791215815920" integrity="sha512-L0ha0OXavK/8okipN9F8BtP84dg9DUhPERbBXzwI6dgTA55d2+yweo3pn5CSFYs45/r8md2+xvUPtTdvTNRfjA==" nonce="MddX4mB3DEioKLdg6VJI+A==" data-cf-beacon='{"version":"2024.11.0","token":"36b4216ae2dc4d5488c249161e71fe1e","spa":2}' crossorigin="anonymous"></script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4bc70e2c01a94c73b74392e4234840661791215815920" integrity="sha512-L0ha0OXavK/8okipN9F8BtP84dg9DUhPERbBXzwI6dgTA55d2+yweo3pn5CSFYs45/r8md2+xvUPtTdvTNRfjA==" nonce="jA4IEeOj2Eem5mvaoO7Ecg==" data-cf-beacon='{"version":"2024.11.0","token":"36b4216ae2dc4d5488c249161e71fe1e","spa":2}' crossorigin="anonymous"></script>
 </body>
 </html>
