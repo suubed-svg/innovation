@@ -16,7 +16,7 @@ header h1,header .sub,header .icons{position:relative;z-index:1}
 header h1{font-family:Georgia,"Times New Roman",serif;font-size:30px;font-weight:700;letter-spacing:2px}
 header .sub{opacity:.9;font-size:14px;margin-top:4px}
 .icons{display:flex;gap:7px;margin-top:10px}
-.icons span{width:22px;height:22px;border-radius:4px;border:2px solid rgba(247,241,226,.85);box-shadow:0 2px 5px rgba(0,0,0,.35)}
+.icons span{width:24px;height:24px;border:none;background:none;box-shadow:none;padding:0}
 /* Symboles du couvercle d'Innovation (SVG inline) */
 .sym{width:22px;height:22px;display:inline-block;background-repeat:no-repeat;background-size:contain;background-position:center;vertical-align:middle}
 .sym{filter:drop-shadow(0 2px 3px rgba(0,0,0,.6))}
@@ -115,6 +115,19 @@ tr.totalRow td{font-weight:800;background:#efe4c4;font-size:13px}
 #btnExport{background:linear-gradient(135deg,#5b4f9e,#8a3df0);color:#fff}
 #btnImport{background:#efe6cd;color:#3b2f6e;border:1.5px solid #3b2f6e}
 #ioMsg{text-align:center;font-size:13px;color:var(--mut);margin-top:10px}
+#searchRow{display:flex;gap:8px}
+#cardSearch{flex:1;min-width:0;padding:12px;border:1.5px solid #d8cbab;border-radius:12px;font-size:15px;outline:none;background:#fffdf6}
+#cardSearch:focus{border-color:#3b2f6e}
+#btnSearch{width:48px;flex-shrink:0;border:none;border-radius:12px;background:linear-gradient(135deg,#5b4f9e,#8a3df0);color:#fff;font-size:18px;font-weight:800}
+#searchHint{font-size:11.5px;color:var(--mut);margin-top:8px}
+#syncCard .desc{font-size:13.5px;line-height:1.5;color:var(--mut)}
+#syncStatus{text-align:center;font-size:13px;font-weight:700;color:var(--acc);margin:10px 0;min-height:17px}
+#ghToken{width:100%;padding:11px;border:1.5px solid #d8cbab;border-radius:12px;font-size:13px;outline:none;background:#fffdf6}
+#ghToken:focus{border-color:#3b2f6e}
+#syncCard button{width:100%;padding:13px;border:none;border-radius:12px;font-size:14px;font-weight:800;margin-top:8px}
+#btnToken{background:linear-gradient(135deg,#388e3c,#2e7d32);color:#fff}
+#btnPull{background:#efe6cd;color:#3b2f6e;border:1.5px solid #3b2f6e}
+#btnSyncOff{background:none;border:1.5px solid #b9a67d;color:#a33327;font-size:12.5px;padding:9px}
 /* Écran de code d'accès */
 #gate{position:fixed;inset:0;z-index:999;background:radial-gradient(circle at 50% 30%,#2b5035 0%,#1a2f20 75%);display:flex;align-items:center;justify-content:center;padding:20px}
 #gate .box{background:var(--card);border:2px solid #b9a67d;border-radius:22px;padding:34px 28px;width:100%;max-width:340px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.5)}
@@ -175,6 +188,14 @@ tr.totalRow td{font-weight:800;background:#efe4c4;font-size:13px}
       <button class="winBtn" id="mBtnF">Floran</button>
     </div>
   </div>
+  <div class="card" id="searchCard">
+    <div class="lbl">🔍 Chercher une carte du jeu</div>
+    <div id="searchRow">
+      <input id="cardSearch" type="text" autocomplete="off" placeholder="Ex. E24 (pagoda)">
+      <button id="btnSearch" title="Ouvrir la page de la carte">🔍</button>
+    </div>
+    <div id="searchHint">Tapez le code d'une carte (ex. E24) puis touchez la loupe : la page d'explication s'ouvre dans un nouvel onglet.</div>
+  </div>
   <div class="card" id="histCard">
     <div class="lbl">Historique — corriger ou annuler n'importe quelle partie saisie</div>
     <div id="histList"></div>
@@ -213,6 +234,15 @@ tr.totalRow td{font-weight:800;background:#efe4c4;font-size:13px}
     <input type="file" id="fileInput" accept=".json,application/json" class="hidden">
     <div id="ioMsg"></div>
   </div>
+  <div class="card" id="syncCard">
+    <div class="lbl">🔄 Synchronisation en ligne — GitHub</div>
+    <div class="desc">Une fois activée, <b style="color:var(--txt)">chaque partie enregistrée est envoyée en ligne et récupérée automatiquement par tous les appareils</b> — iPad, iPhone, Mac. Plus besoin d'exporter/importer.</div>
+    <div id="syncStatus"></div>
+    <input id="ghToken" type="password" autocomplete="off" placeholder="Collez ici votre token GitHub (github_pat_…)">
+    <button id="btnToken">✓ Activer la synchronisation</button>
+    <button id="btnPull">↻ Récupérer les scores en ligne maintenant</button>
+    <button id="btnSyncOff">Désactiver la synchronisation (rester en local)</button>
+  </div>
 </main>
 <div id="toast"></div>
 <script>
@@ -237,6 +267,53 @@ const SYMB={
  A:'<svg width="24" height="24" viewBox="0 0 20 20"><path d="M10 2 18.5 17H1.5Z" fill="none" stroke="#e3a4ff" stroke-width="3" stroke-linejoin="round"/></svg>',
  I:'<svg width="24" height="24" viewBox="0 0 20 20"><path d="M1 10C3.5 5 6.5 3 10 3s6.5 2 9 7c-2.5 5-5.5 7-9 7S3.5 15 1 10Z" fill="none" stroke="#d9d9d9" stroke-width="2.5"/><circle cx="10" cy="10" r="3" fill="#d9d9d9"/></svg>'};
 const KEY="innovation-ft-v2";
+const GH_OWNER="suubed-svg",GH_REPO="innovation",GH_FILE="scores.json";
+const TOKEN_KEY="innovation-gh-token";
+function ghToken(){return localStorage.getItem(TOKEN_KEY)||""}
+function gid(g){return g.d+"|"+g.ed+"|"+g.combo+"|"+g.w}
+function validGame(g){return g&&g.d&&g.ed&&g.combo&&g.w}
+function mergeRemote(d){
+ if(!d||!Array.isArray(d.games))return 0;
+ const ids=new Set(S.games.map(gid));
+ let added=0;
+ for(const g of d.games){const id=gid(g);if(!ids.has(id)&&validGame(g)){S.games.push(g);ids.add(id);added++}}
+ if(d.last)for(const k of Object.keys(d.last))if(!S.last[k])S.last[k]=d.last[k];
+ if(added)saveLocal();
+ return added}
+function syncMsg(m){const el=$("#syncStatus");if(el)el.textContent=m}
+function ghHeaders(json){const hd={};if(ghToken())hd.Authorization="Bearer "+ghToken();if(json)hd.Accept="application/vnd.github+json";return hd}
+async function pullRemote(quiet){
+ try{
+  const r=await fetch("https://raw.githubusercontent.com/"+GH_OWNER+"/"+GH_REPO+"/main/"+GH_FILE+"?t="+Date.now(),{headers:ghHeaders(false),cache:"no-store"});
+  if(!r.ok){if(!quiet)syncMsg("Aucune sauvegarde en ligne pour l'instant — elle sera créée à la première partie enregistrée.");return}
+  const d=await r.json();
+  const added=mergeRemote(d);
+  if(added){refreshAll();syncMsg("✓ "+added+" partie(s) récupérée(s) depuis GitHub.")}
+  else if(!quiet)syncMsg("✓ Déjà à jour avec GitHub.")
+ }catch(e){if(!quiet)syncMsg("✗ Connexion impossible (hors ligne ?) — vos scores restent enregistrés localement.")}}
+async function putRemote(sha){
+ const body=JSON.stringify(S);
+ const bytes=new TextEncoder().encode(body);
+ let bin="";for(const b of bytes)bin+=String.fromCharCode(b);
+ const r=await fetch("https://api.github.com/repos/"+GH_OWNER+"/"+GH_REPO+"/contents/"+GH_FILE,{
+  method:"PUT",headers:ghHeaders(true),
+  body:JSON.stringify({message:"Synchronisation des scores",content:btoa(bin),sha})});
+ return r}
+async function pushRemote(){
+ if(!ghToken()){syncMsg("⚠ Synchronisation non activée — scores enregistrés en local uniquement.");return}
+ try{
+  let sha=null;
+  const head=await fetch("https://api.github.com/repos/"+GH_OWNER+"/"+GH_REPO+"/contents/"+GH_FILE,{headers:ghHeaders(true)});
+  if(head.ok){const meta=await head.json();sha=meta.sha}
+  let r=await putRemote(sha);
+  if(r.status===409){
+   await pullRemote(true);
+   const head2=await fetch("https://api.github.com/repos/"+GH_OWNER+"/"+GH_REPO+"/contents/"+GH_FILE,{headers:ghHeaders(true)});
+   if(head2.ok){const meta2=await head2.json();r=await putRemote(meta2.sha)}}
+  if(r.ok){syncMsg("✓ Synchronisé en ligne "+new Date().toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"}))}
+  else if(r.status===401){syncMsg("✗ Token refusé — vérifiez-le ou générez-en un nouveau.")}
+  else{syncMsg("✗ Envoi impossible ("+r.status+") — scores gardés en local.")}
+ }catch(e){syncMsg("✗ Envoi impossible (hors ligne ?) — scores gardés en local.")}}
 let S=JSON.parse(localStorage.getItem(KEY)||"null")||{games:[],last:{}};
 const $=s=>document.querySelector(s);
 let ed="ultimate",draw=null,fixing=null,mSel=new Set(),mEd="ultimate";
@@ -287,7 +364,7 @@ function saveManual(winner){
  S.games.push({ed:mEd,combo:c||"BASE",w:winner,d:Date.now()});
  saveLocal();
  toast((winner==="T"?"Typhaine":"Floran")+" +1 victoire ! ("+(c?comboName(c):"Jeu de base")+")");
- mSel.clear();renderManual();refreshAll()}
+ mSel.clear();renderManual();refreshAll();pushRemote()}
 $("#mEdSeg").onclick=e=>{const b=e.target.closest("button");if(!b)return;mEd=b.dataset.v;
  document.querySelectorAll("#mEdSeg button").forEach(x=>x.classList.toggle("on",x===b))};
 $("#mBtnT").onclick=()=>saveManual("T");
@@ -297,27 +374,27 @@ function record(winner){
  S.games.push({ed,combo:c,w:winner,d:Date.now()});
  S.last[ed]=c;saveLocal();draw=null;
  toast((winner==="T"?"Typhaine":"Floran")+" +1 victoire ! ("+comboName(c)+")");
- refreshAll()}
+ refreshAll();pushRemote()}
 function undoLast(){
  if(!S.games.length)return;
  const g=S.games[S.games.length-1];
  S.games.pop();saveLocal();
  toast("Partie annulée : "+(g.w==="T"?"Typhaine":"Floran")+" — "+comboName(g.combo));
- refreshAll()}
+ refreshAll();pushRemote()}
 function delGame(d){
  const i=S.games.findIndex(g=>g.d===d);
  if(i<0)return;
  const g=S.games[i];
  S.games.splice(i,1);saveLocal();
  toast("Partie supprimée : "+(g.w==="T"?"Typhaine":"Floran")+" — "+comboName(g.combo));
- refreshAll()}
+ refreshAll();pushRemote()}
 function fixGame(d){
  if(fixing===d){fixing=null}else{fixing=d}
  renderHist()}
 function saveFix(){
  if(fixing==null)return;
  saveLocal();toast("Partie corrigée ✓");fixing=null;
- refreshAll()}
+ refreshAll();pushRemote()}
 function renderHist(){
  const list=S.games.slice().reverse();
  if(!list.length){$("#histList").innerHTML="<div id='histEmpty'>Aucune partie saisie pour l'instant sur cet appareil. Les 792 parties du tableur historique sont déjà incluses dans les stats.</div>";$("#undo").disabled=true;return}
@@ -417,11 +494,29 @@ function renderStats(){
   html+=`<tr class="totalRow"><td style="border-top:2px solid #b9a67d">TOTAL</td><td class='pT'>${tu}</td><td class='pF'>${fu}</td><td class='pT'>${tv}</td><td class='pF'>${fv}</td><td>${t+f}</td><td>${leaderTxt(t,f)}</td><td>${pieRow(t,f)}</td></tr>`}
  html+="</table>";
  $("#tableWrap").innerHTML=shown?html:"<div class='card' style='text-align:center;color:var(--mut)'>Aucune partie.</div>"}
+$("#btnToken").onclick=()=>{
+ const v=$("#ghToken").value.trim();
+ if(!v){syncMsg("Collez d'abord le token GitHub.");return}
+ localStorage.setItem(TOKEN_KEY,v);
+ syncMsg("✓ Synchronisation activée — envoi des scores…");
+ pushRemote()};
+$("#btnPull").onclick=()=>pullRemote(false);
+$("#btnSyncOff").onclick=()=>{
+ localStorage.removeItem(TOKEN_KEY);
+ syncMsg("Synchronisation désactivée — vos scores restent enregistrés sur cet appareil uniquement.")};
+if(!ghToken())syncMsg("Synchronisation non activée — collez un token GitHub ci-dessous (une seule fois par appareil).");
+function openCardPage(){
+ const v=$("#cardSearch").value.trim().toLowerCase();
+ if(!v){$("#searchHint").textContent="Tapez d'abord un code de carte (ex. E24).";return}
+ window.open("https://asmadigames.com/innovation/?cardID="+encodeURIComponent(v),"_blank");
+ $("#searchHint").textContent="Page ouverte pour la carte "+v.toUpperCase()+" — revenez ici pour continuer."}
+$("#btnSearch").onclick=openCardPage;
+$("#cardSearch").addEventListener("keydown",e=>{if(e.key==="Enter")openCardPage()});
 function showTab(id){
  ["play","stats","io"].forEach(x=>$("#"+x).classList.toggle("hidden",x!==id));
  ["tabPlay","tabStats","tabIO"].forEach(x=>$("#"+x).classList.remove("on"));
  $({play:"#tabPlay",stats:"#tabStats",io:"#tabIO"}[id]).classList.add("on");
- if(id==="stats"){renderStats();renderCurve()}}
+ if(id==="stats"){renderStats();renderCurve();pullRemote(true)}}
 $("#tabPlay").onclick=()=>showTab("play");
 $("#tabStats").onclick=()=>showTab("stats");
 $("#tabIO").onclick=()=>showTab("io");
@@ -450,13 +545,14 @@ $("#fileInput").onchange=e=>{
    for(const g of d.games){const id=g.d+"|"+g.ed+"|"+g.combo+"|"+g.w;
     if(!ids.has(id)){S.games.push(g);ids.add(id);added++}}
    if(d.last)for(const k of Object.keys(d.last))if(!S.last[k])S.last[k]=d.last[k];
-   saveLocal();refreshAll();
+   saveLocal();refreshAll();pushRemote();
    $("#ioMsg").textContent=added?("✓ Fusion réussie : "+added+" partie(s) ajoutée(s)."):"✓ Déjà à jour : aucune nouvelle partie."}
   catch(err){$("#ioMsg").textContent="✗ Fichier invalide."}};
  r.readAsText(file);
  e.target.value=""};
 document.querySelectorAll(".icons .sym").forEach(el=>{el.innerHTML=SYMB[el.className.split("sym-")[1]]||""});
 renderDraw();renderStats();renderHist();renderManual();renderExtPie();renderCurve();
+pullRemote(true);
 function refreshAll(){renderDraw();renderStats();renderHist();renderExtPie();renderCurve()}
 </script>
 <script>
@@ -473,6 +569,6 @@ function refreshAll(){renderDraw();renderStats();renderHist();renderExtPie();ren
  document.getElementById("gateIn").addEventListener("keydown",function(e){if(e.key==="Enter")tryCode()});
 })();
 </script>
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4bc70e2c01a94c73b74392e4234840661791215815920" integrity="sha512-L0ha0OXavK/8okipN9F8BtP84dg9DUhPERbBXzwI6dgTA55d2+yweo3pn5CSFYs45/r8md2+xvUPtTdvTNRfjA==" nonce="gUYf+rc4OAppYBsx8ZfrJA==" data-cf-beacon='{"version":"2024.11.0","token":"36b4216ae2dc4d5488c249161e71fe1e","spa":2}' crossorigin="anonymous"></script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4bc70e2c01a94c73b74392e4234840661791215815920" integrity="sha512-L0ha0OXavK/8okipN9F8BtP84dg9DUhPERbBXzwI6dgTA55d2+yweo3pn5CSFYs45/r8md2+xvUPtTdvTNRfjA==" nonce="TIYTaBceujJHziDgcAg0IA==" data-cf-beacon='{"version":"2024.11.0","token":"36b4216ae2dc4d5488c249161e71fe1e","spa":2}' crossorigin="anonymous"></script>
 </body>
 </html>
