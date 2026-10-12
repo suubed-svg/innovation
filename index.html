@@ -7,67 +7,132 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Innovation — Floran &amp; Typhaine</title>
 <style>
-:root{--t:#ec4e9b;--f:#3b8ef3;--bg:#f4f5fb;--card:#fff;--txt:#1c1e2b;--mut:#8a8fa6;--line:#e6e8f2;--acc:#5b5ef0}
+:root{--t:#c2185b;--f:#1565c0;--bg:#23422b;--felt:#2b5035;--card:#f7f1e2;--txt:#2b2016;--mut:#7a6a52;--line:#d8cbab;--gold:#c9a227;--acc:#3b2f6e}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;font-family:-apple-system,system-ui,sans-serif}
-body{background:var(--bg);color:var(--txt);min-height:100vh;padding-bottom:40px}
-header{background:linear-gradient(135deg,#4a4ef0,#7a3df0 60%,#b93df0);padding:26px 20px 30px;border-radius:0 0 28px 28px;color:#fff}
-header h1{font-size:24px;font-weight:800}
-header .sub{opacity:.85;font-size:14px;margin-top:3px}
-.tabs{display:flex;gap:10px;padding:0 18px;margin:-22px 16px 0}
-.tab{flex:1;padding:13px;border-radius:14px;border:none;background:rgba(255,255,255,.25);color:#fff;font-size:15px;font-weight:700}
-.tab.on{background:#fff;color:var(--acc);box-shadow:0 6px 18px rgba(60,50,180,.25)}
+body{background:radial-gradient(circle at 50% 20%,var(--felt) 0%,var(--bg) 75%);color:var(--txt);min-height:100vh;padding-bottom:40px}
+header{background:#101010;padding:26px 20px 24px;border-radius:0 0 28px 28px;color:#f4f4f4;position:relative;overflow:hidden}
+header::before{content:"";position:absolute;inset:-60%;background:repeating-conic-gradient(#242424 0% 25%,#0c0c0c 0% 50%);background-size:36px 36px;transform:rotate(45deg);z-index:0}
+header h1,header .sub,header .icons{position:relative;z-index:1}
+header h1{font-family:Georgia,"Times New Roman",serif;font-size:30px;font-weight:700;letter-spacing:2px}
+header .sub{opacity:.9;font-size:14px;margin-top:4px}
+.icons{display:flex;gap:7px;margin-top:10px}
+.icons span{width:22px;height:22px;border-radius:4px;border:2px solid rgba(247,241,226,.85);box-shadow:0 2px 5px rgba(0,0,0,.35)}
+/* Symboles du couvercle d'Innovation (SVG inline) */
+.sym{width:22px;height:22px;display:inline-block;background-repeat:no-repeat;background-size:contain;background-position:center;vertical-align:middle}
+.sym{filter:drop-shadow(0 2px 3px rgba(0,0,0,.6))}
+.tabs{display:flex;flex-wrap:wrap;gap:8px;padding:16px 12px 0;width:100%}
+.tab{flex:1 1 110px;max-width:200px;padding:12px 6px;border-radius:14px;border:2px solid #5c4a2e;background:var(--card);color:#5c4a2e;font-size:14px;font-weight:800;box-shadow:0 4px 12px rgba(0,0,0,.35);white-space:nowrap}
+@media (max-width:359px){.tab{flex-basis:100%;max-width:none}}
+@media (min-width:480px){.tab{font-size:15px;padding:13px 4px}}
+html,body{max-width:100vw;overflow-x:hidden}
+.tab.on{background:linear-gradient(135deg,#e8c34a,#c9a227);color:#3a2c08;border-color:#8a6d14}
 main{padding:18px}
-.card{background:var(--card);border-radius:18px;box-shadow:0 2px 12px rgba(30,30,80,.07);padding:18px;margin-bottom:14px}
+.card{background:var(--card);border:2px solid #b9a67d;border-radius:18px;box-shadow:0 4px 14px rgba(0,0,0,.35);padding:18px;margin-bottom:14px}
 .lbl{font-size:12px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--mut);margin-bottom:10px}
 .seg{display:flex;gap:8px}
-.seg button{flex:1;padding:11px;border-radius:12px;border:1.5px solid var(--line);background:#fff;color:var(--mut);font-size:15px;font-weight:600}
-.seg button.on{border-color:var(--acc);color:var(--acc);background:#f0f1fe}
-#drawCard{text-align:center;background:linear-gradient(160deg,#fff,#f4f2ff)}
+.seg button{flex:1;padding:11px;border-radius:12px;border:1.5px solid #b9a67d;background:#efe6cd;color:#7a6a52;font-size:15px;font-weight:700}
+.seg button.on{border-color:#3b2f6e;background:#3b2f6e;color:#f7f1e2}
+#drawCard{text-align:center;background:linear-gradient(160deg,#f7f1e2,#efe4c4)}
 .drawRow{display:flex;align-items:center;justify-content:space-between;padding:10px 4px;border-bottom:1px solid var(--line);text-align:left}
 .drawRow:last-of-type{border-bottom:none}
 .drawRow .en{font-size:16px;font-weight:700}
 .drawRow .prob{font-size:12px;color:var(--mut);font-weight:500}
-.drawRow .mark{width:26px;height:26px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;color:#fff;background:#c3c8dd;margin-left:8px;flex-shrink:0}
-.drawRow.sel .mark{background:linear-gradient(135deg,#5b5ef0,#8a3df0);box-shadow:0 3px 10px rgba(90,62,240,.35)}
+.drawRow .mark{width:26px;height:26px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;color:#fff;background:#b9a67d;margin-left:8px;flex-shrink:0}
+.drawRow.sel .mark{background:linear-gradient(135deg,#5b4f9e,#8a3df0);box-shadow:0 3px 10px rgba(90,62,240,.35)}
 .drawRow.sel .en{color:var(--acc)}
 #comboStats{margin-top:14px;padding-top:14px;border-top:1px solid var(--line);font-size:14px}
 #comboStats .big{font-size:17px;font-weight:800;margin-bottom:6px}
 #comboStats .row{display:flex;justify-content:center;gap:18px;font-weight:600}
 #comboStats .row b{font-size:16px}
-#redraw{margin-top:12px;padding:9px 20px;border-radius:999px;border:1.5px solid var(--line);background:#fff;color:var(--mut);font-size:13px;font-weight:600}
+#redraw{margin-top:12px;padding:9px 20px;border-radius:999px;border:1.5px solid #b9a67d;background:var(--card);color:#7a6a52;font-size:13px;font-weight:700}
 #vs{display:flex;gap:12px;margin-top:4px}
-.winBtn{flex:1;padding:22px 10px;border:none;border-radius:16px;color:#fff;font-size:18px;font-weight:800;box-shadow:0 6px 16px rgba(0,0,0,.13)}
+.winBtn{flex:1;padding:22px 10px;border:none;border-radius:16px;color:#fff;font-size:18px;font-weight:800;box-shadow:0 6px 16px rgba(0,0,0,.3)}
 .winBtn:active{transform:scale(.96)}
-#btnT{background:linear-gradient(160deg,#f062ab,#d5387f)}
-#btnF{background:linear-gradient(160deg,#4a95f5,#256fd8)}
-#toast{position:fixed;top:18px;left:50%;transform:translateX(-50%) translateY(-90px);background:#1c1e2b;color:#fff;padding:13px 26px;border-radius:999px;font-size:15px;font-weight:700;transition:transform .3s;z-index:99}
+#btnT{background:linear-gradient(160deg,#d5387f,#8e1c4e)}
+#btnF{background:linear-gradient(160deg,#4a95f5,#144a8f)}
+#undo{display:block;width:100%;margin-top:12px;padding:11px;border-radius:12px;border:1.5px solid #b9a67d;background:#efe6cd;color:#7a6a52;font-size:14px;font-weight:700}
+#undo:disabled{opacity:.45}
+#toast{position:fixed;top:18px;left:50%;transform:translateX(-50%) translateY(-90px);background:#2b2016;color:#f7f1e2;padding:13px 26px;border-radius:999px;font-size:15px;font-weight:700;transition:transform .3s;z-index:99}
 #toast.show{transform:translateX(-50%) translateY(0)}
-h2{font-size:17px;font-weight:800;margin:20px 0 10px}
+h2{font-size:17px;font-weight:800;margin:20px 0 10px;color:var(--card);text-shadow:0 2px 6px rgba(0,0,0,.4)}
 .gen{display:flex;gap:12px}
-.gen .g{flex:1;text-align:center;background:var(--card);border-radius:16px;padding:14px;box-shadow:0 2px 12px rgba(30,30,80,.07)}
+.gen .g{flex:1;text-align:center;background:var(--card);border:2px solid #b9a67d;border-radius:16px;padding:14px;box-shadow:0 4px 14px rgba(0,0,0,.35)}
 .gen .n{font-size:12px;font-weight:700;color:var(--mut)}
 .gen .v{font-size:30px;font-weight:900;margin:2px 0}
 .gen .d{font-size:12px;font-weight:600}
 .pT{color:var(--t)}.pF{color:var(--f)}
-table{width:100%;border-collapse:collapse;background:var(--card);border-radius:14px;overflow:hidden;box-shadow:0 2px 12px rgba(30,30,80,.07);font-size:13px}
-th,td{padding:9px 6px;text-align:center;border-bottom:1px solid var(--line)}
-th{color:var(--mut);font-size:11px;font-weight:700;text-transform:uppercase}
-td:first-child,th:first-child{text-align:left;padding-left:12px;font-weight:600}
+#tableWrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+#tableWrap table{min-width:460px;border-collapse:collapse;background:var(--card);border-radius:14px;overflow:hidden;box-shadow:0 4px 14px rgba(0,0,0,.35);font-size:12px}
+.donut{display:inline-block;width:26px;height:26px;border-radius:50%;position:relative;vertical-align:middle;flex-shrink:0}
+.donut::after{content:"";position:absolute;inset:7px;background:var(--card);border-radius:50%}
+#extCard{display:flex;flex-direction:column;align-items:center;gap:16px}
+#extPie{width:170px;height:170px;border-radius:50%;box-shadow:0 4px 14px rgba(0,0,0,.35);flex-shrink:0}
+#extLegend{display:flex;flex-wrap:wrap;gap:8px 16px;justify-content:center;font-size:13px;font-weight:600}
+#extLegend .li{display:flex;align-items:center;gap:6px}
+#extLegend .sq{width:14px;height:14px;border-radius:4px;border:1.5px solid rgba(0,0,0,.2)}
+#extChartTitle{font-size:13px;color:var(--mut);font-weight:600;text-align:center}
+#curveCard{padding:14px 10px}
+#curveSvgWrap{width:100%;overflow:hidden}
+.curveLeg{display:flex;gap:16px;justify-content:center;margin-top:8px;font-size:13px;font-weight:700}
+.curveLeg .li{display:flex;align-items:center;gap:5px}
+.curveLeg .sw{width:18px;height:4px;border-radius:2px}
+th,td{padding:9px 5px;text-align:center;border-bottom:1px solid var(--line)}
+th{color:var(--mut);font-size:10.5px;font-weight:700;text-transform:uppercase}
+td:first-child,th:first-child{text-align:left;padding-left:12px;font-weight:700}
 tr:last-child td{border-bottom:none}
+tr.totalRow td{font-weight:800;background:#efe4c4;font-size:13px}
 .win{font-size:11px;font-weight:700}
-.zero{color:#b9bccb}
+.zero{color:#b9a67d}
 .hidden{display:none}
-#lastG{font-size:13px;color:var(--mut);text-align:center;margin-top:10px}
+#histCard .hRow{display:flex;align-items:center;gap:10px;padding:9px 2px;border-bottom:1px solid var(--line);text-align:left}
+#histCard .hRow:last-child{border-bottom:none}
+#histCard .hInfo{flex:1;font-size:14px}
+#histCard .hInfo .c{font-weight:700}
+#histCard .hInfo .d{font-size:12px;color:var(--mut)}
+#histCard .btns{display:flex;gap:6px}
+#histCard .del,#histCard .fix{width:30px;height:30px;border-radius:8px;border:1.5px solid #d8cbab;background:#efe6cd;font-size:15px;font-weight:800;flex-shrink:0}
+#histCard .del{color:#a33327}
+#histCard .fix{color:#3b2f6e}
+#histCard .fixRow{display:flex;gap:8px;padding:6px 2px 12px;border-bottom:1px solid var(--line);align-items:center}
+#histCard .fixRow .q{flex:1;font-size:12.5px;color:var(--mut);font-weight:600}
+#histCard .fixRow button{padding:8px 14px;border-radius:10px;border:1.5px solid #b9a67d;background:#efe6cd;font-size:13px;font-weight:800}
+#histCard .fixRow .wT.on{background:linear-gradient(160deg,#d5387f,#8e1c4e);color:#fff;border-color:#8e1c4e}
+#histCard .fixRow .wF.on{background:linear-gradient(160deg,#4a95f5,#144a8f);color:#fff;border-color:#144a8f}
+#histCard .fixEd{display:flex;gap:8px;padding:10px 2px 12px;border-bottom:1px solid var(--line)}
+#histCard .fixEd button{flex:1;padding:8px;border-radius:10px;border:1.5px solid #b9a67d;background:#efe6cd;font-size:13px;font-weight:800;color:#7a6a52}
+#histCard .fixEd button.on{background:#3b2f6e;color:#f7f1e2;border-color:#3b2f6e}
+#histCard .fixC{display:flex;flex-wrap:wrap;gap:6px;padding:10px 2px 14px;border-bottom:1px solid var(--line)}
+#histCard .fixC button{padding:8px 10px;border-radius:10px;border:1.5px solid #b9a67d;background:#efe6cd;font-size:12px;font-weight:700;color:#7a6a52}
+#histCard .fixC button.on{background:#3b2f6e;color:#f7f1e2;border-color:#3b2f6e}
+#histCard .ok{width:100%;margin-top:10px;padding:10px;border-radius:10px;border:none;background:linear-gradient(135deg,#5b4f9e,#8a3df0);color:#fff;font-size:13px;font-weight:800}
+#histEmpty{font-size:13px;color:var(--mut);text-align:center;padding:8px}
+#manualCard .chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+#manualCard .chip{display:flex;align-items:center;gap:7px;padding:9px 13px;border-radius:12px;border:1.5px solid #b9a67d;background:#efe6cd;font-size:14px;font-weight:700;color:#7a6a52}
+#manualCard .chip.on{border-color:#3b2f6e;background:#3b2f6e;color:#f7f1e2}
+#manualCard .chip .sq{width:16px;height:16px;border-radius:4px;border:1.5px solid rgba(0,0,0,.25)}
+#manualCard #mComboName{text-align:center;font-size:13px;color:var(--mut);font-weight:600;margin-bottom:12px;min-height:17px}
 #ioCard button{width:100%;padding:14px;border:none;border-radius:12px;font-size:15px;font-weight:800;margin-top:10px}
-#btnExport{background:linear-gradient(135deg,#5b5ef0,#8a3df0);color:#fff}
-#btnImport{background:#f0f1fe;color:var(--acc);border:1.5px solid var(--acc)}
+#btnExport{background:linear-gradient(135deg,#5b4f9e,#8a3df0);color:#fff}
+#btnImport{background:#efe6cd;color:#3b2f6e;border:1.5px solid #3b2f6e}
 #ioMsg{text-align:center;font-size:13px;color:var(--mut);margin-top:10px}
+/* Écran de code d'accès */
+#gate{position:fixed;inset:0;z-index:999;background:radial-gradient(circle at 50% 30%,#2b5035 0%,#1a2f20 75%);display:flex;align-items:center;justify-content:center;padding:20px}
+#gate .box{background:var(--card);border:2px solid #b9a67d;border-radius:22px;padding:34px 28px;width:100%;max-width:340px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+#gate .lock{font-size:40px;margin-bottom:10px}
+#gate h3{font-size:19px;font-weight:800;color:#2b2016;margin-bottom:6px}
+#gate p{font-size:13px;color:#7a6a52;margin-bottom:18px;line-height:1.5}
+#gateIn{width:100%;padding:14px;border:1.5px solid #d8cbab;border-radius:12px;font-size:17px;text-align:center;letter-spacing:2px;outline:none;background:#fffdf6}
+#gateIn:focus{border-color:#3b2f6e}
+#gateBtn{width:100%;margin-top:12px;padding:14px;border:none;border-radius:12px;background:linear-gradient(135deg,#e8c34a,#c9a227);color:#3a2c08;font-size:15px;font-weight:800}
+#gateErr{font-size:13px;color:#c2185b;margin-top:10px;font-weight:600;min-height:18px}
 </style>
 </head>
 <body>
+<div id="gate"><div class="box"><div class="lock">🔐</div><h3>Accès privé</h3><p>Cette application est réservée à Typhaine et Floran.<br>Entrez le code pour continuer.</p><input id="gateIn" type="password" autocomplete="off" placeholder="Code d’accès"><button id="gateBtn">Déverrouiller</button><div id="gateErr"></div></div></div>
 <header>
   <h1>Innovation</h1>
   <div class="sub">Carl Chudyk · Floran <span style="color:#9cc6ff">●</span> vs <span style="color:#ffb3d8">●</span> Typhaine</div>
+  <div class="icons"><span class="sym sym-E"></span><span class="sym sym-L"></span><span class="sym sym-C"></span><span class="sym sym-A"></span><span class="sym sym-I"></span></div>
 </header>
 <div class="tabs">
   <button class="tab on" id="tabPlay">🎲 Jouer</button>
@@ -95,21 +160,45 @@ tr:last-child td{border-bottom:none}
       <button class="winBtn" id="btnT">Typhaine</button>
       <button class="winBtn" id="btnF">Floran</button>
     </div>
+    <button id="undo">↩︎ Annuler la dernière partie saisie</button>
+  </div>
+  <div class="card" id="manualCard">
+    <div class="lbl">📝 Noter une partie jouée sans l'app (tirage fait à la main)</div>
+    <div class="chips" id="mChips"></div>
+    <div id="mComboName"></div>
+    <div class="seg" id="mEdSeg">
+      <button class="on" data-v="ultimate">Ultimate</button>
+      <button data-v="vintage">Vintage</button>
+    </div>
+    <div id="vs" style="margin-top:14px">
+      <button class="winBtn" id="mBtnT">Typhaine</button>
+      <button class="winBtn" id="mBtnF">Floran</button>
+    </div>
+  </div>
+  <div class="card" id="histCard">
+    <div class="lbl">Historique — corriger ou annuler n'importe quelle partie saisie</div>
+    <div id="histList"></div>
   </div>
 </main>
 <main id="stats" class="hidden">
   <div class="gen">
-    <div class="g"><div class="n">Typhaine</div><div class="v pT" id="gT">0</div><div class="d" id="dT"></div></div>
-    <div class="g"><div class="n">Floran</div><div class="v pF" id="gF">0</div><div class="d" id="dF"></div></div>
+    <div class="g"><div class="n">Général Typhaine</div><div class="v pT" id="gT">0</div><div class="d" id="dT"></div></div>
+    <div class="g"><div class="n">Général Floran</div><div class="v pF" id="gF">0</div><div class="d" id="dF"></div></div>
   </div>
-  <h2>Par combinaison d'extensions</h2>
-  <div class="card" style="padding:10px">
-    <div class="seg" id="edSeg2">
-      <button class="on" data-v="ultimate">Ultimate</button>
-      <button data-v="vintage">Vintage</button>
-    </div>
-  </div>
+  <h2>Par combinaison d'extensions — Ultimate &amp; Vintage</h2>
   <div id="tableWrap"></div>
+  <h2>Évolution des scores</h2>
+  <div class="card" id="curveCard">
+    <div id="curveSvgWrap"></div>
+    <div class="curveLeg"><div class="li"><span class="sw" style="background:#d5387f"></span>Typhaine</div><div class="li"><span class="sw" style="background:#2f6fd8"></span>Floran</div></div>
+    <div id="curveNote" style="font-size:11.5px;color:var(--mut);text-align:center;margin-top:6px"></div>
+  </div>
+  <h2>Part des extensions jouées</h2>
+  <div class="card" id="extCard">
+    <div id="extChartTitle">Proportion de chaque extension — parties Ultimate uniquement</div>
+    <div id="extPie"></div>
+    <div id="extLegend"></div>
+  </div>
 </main>
 <main id="io" class="hidden">
   <div class="card" id="ioCard">
@@ -130,14 +219,27 @@ tr:last-child td{border-bottom:none}
 const EXT={A:"Artéfacts",C:"Cités",E:"Échos",L:"Légendes",I:"l'Invisible"};
 const KEYS=["A","C","E","L","I"];
 const COMBOS=["A","C","E","L","I","AC","AE","AL","AI","CE","CL","CI","EL","EI","LI","ACE","ACL","ACI","AEL","AEI","ALI","CEL","CEI","CLI","ELI","ACEL","ACEI","ACLI","AELI","CELI","ACELI"];
+const EDN={ultimate:"Ultimate",vintage:"Vintage"};
 const PRE={
- ultimate:{A:[7,7],C:[7,2],E:[170,153],L:[5,4],I:[0,1],AC:[1,0],AE:[1,2],AL:[0,1],CE:[1,0],CL:[1,0],CI:[0,1],EI:[1,0],LI:[1,0],ACE:[0,2],ACL:[1,0],AEL:[0,1],CEL:[0,1],CEI:[1,0],CLI:[0,1],ACEL:[1,0],ACEI:[1,2],CELI:[1,0],ACELI:[0,2]},
- vintage:{AC:[12,10],AE:[11,13],AL:[6,10],CE:[25,24],CL:[19,12],EL:[15,11],ACE:[20,19],ACL:[15,17],AEL:[27,34],CEL:[23,18],ACEL:[41,29]}
+ ultimate:{I:[0,1],AC:[1,0],AE:[1,2],AL:[0,1],CE:[1,0],CL:[1,0],CI:[0,1],EI:[1,0],LI:[1,0],ACE:[0,2],ACL:[1,0],AEL:[0,1],CEL:[0,1],CEI:[1,0],CLI:[0,1],ACEL:[2,0],ACEI:[1,2],CELI:[1,0],ACELI:[0,2]},
+ vintage:{A:[7,7],C:[7,2],E:[170,153],L:[5,4],AC:[12,10],AE:[11,13],AL:[6,10],CE:[25,24],CL:[19,12],EL:[15,11],ACE:[20,19],ACL:[15,17],AEL:[27,34],CEL:[23,18],ACEL:[41,29]}
 };
+const SYM={
+ E:'<svg width="16" height="16" viewBox="0 0 20 20" style="vertical-align:middle;margin-right:5px"><path d="M10 1 19 10 10 19 1 10Z" fill="#1976d2"/></svg>',
+ L:'<svg width="16" height="16" viewBox="0 0 20 20" style="vertical-align:middle;margin-right:5px"><circle cx="10" cy="10" r="8" fill="#388e3c"/><circle cx="10" cy="10" r="3" fill="#f7f1e2"/></svg>',
+ C:'<svg width="16" height="16" viewBox="0 0 20 20" style="vertical-align:middle;margin-right:5px"><circle cx="10" cy="10" r="9" fill="#d32f2f"/><path d="M10 2.5 12.4 7.6 18 8.3 13.9 12.2 15.1 17.8 10 15 4.9 17.8 6.1 12.2 2 8.3 7.6 7.6Z" fill="#fff"/></svg>',
+ A:'<svg width="16" height="16" viewBox="0 0 20 20" style="vertical-align:middle;margin-right:5px"><path d="M10 2 18.5 17H1.5Z" fill="none" stroke="#9c27b0" stroke-width="3" stroke-linejoin="round"/></svg>',
+ I:'<svg width="16" height="16" viewBox="0 0 20 20" style="vertical-align:middle;margin-right:5px"><path d="M1 10C3.5 5 6.5 3 10 3s6.5 2 9 7c-2.5 5-5.5 7-9 7S3.5 15 1 10Z" fill="#757575"/><circle cx="10" cy="10" r="3" fill="#fff"/></svg>'};
+const SYMB={
+ E:'<svg width="24" height="24" viewBox="0 0 20 20"><path d="M10 1 19 10 10 19 1 10Z" fill="none" stroke="#9cc6ff" stroke-width="3" stroke-linejoin="round"/></svg>',
+ L:'<svg width="24" height="24" viewBox="0 0 20 20"><circle cx="10" cy="10" r="7.5" fill="none" stroke="#8fe3a0" stroke-width="3"/><circle cx="10" cy="10" r="2.2" fill="#8fe3a0"/></svg>',
+ C:'<svg width="24" height="24" viewBox="0 0 20 20"><path d="M10 1.5 12.4 7 18.3 7.8 14 12 15.2 17.9 10 15.1 4.8 17.9 6 12 1.7 7.8 7.6 7Z" fill="#ff8a80"/></svg>',
+ A:'<svg width="24" height="24" viewBox="0 0 20 20"><path d="M10 2 18.5 17H1.5Z" fill="none" stroke="#e3a4ff" stroke-width="3" stroke-linejoin="round"/></svg>',
+ I:'<svg width="24" height="24" viewBox="0 0 20 20"><path d="M1 10C3.5 5 6.5 3 10 3s6.5 2 9 7c-2.5 5-5.5 7-9 7S3.5 15 1 10Z" fill="none" stroke="#d9d9d9" stroke-width="2.5"/><circle cx="10" cy="10" r="3" fill="#d9d9d9"/></svg>'};
 const KEY="innovation-ft-v2";
 let S=JSON.parse(localStorage.getItem(KEY)||"null")||{games:[],last:{}};
 const $=s=>document.querySelector(s);
-let ed="ultimate",draw=null;
+let ed="ultimate",draw=null,fixing=null,mSel=new Set(),mEd="ultimate";
 function saveLocal(){localStorage.setItem(KEY,JSON.stringify(S))}
 function toast(msg){const t=$("#toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2400)}
 function comboName(c){return c?c.split("").map(x=>EXT[x]).join(" + "):"Jeu de base (aucune extension)"}
@@ -149,60 +251,186 @@ function statsFor(edn,combo){
  const p=(PRE[edn]||{})[combo]||[0,0];let t=p[0],f=p[1];
  for(const g of S.games)if(g.ed===edn&&g.combo===combo){if(g.w==="T")t++;else f++}
  return[t,f]}
+function baseCount(){let t=0,f=0;for(const g of S.games)if(g.combo==="BASE"){if(g.w==="T")t++;else f++}return[t,f]}
+function agg(edn){
+ const a={};COMBOS.forEach(c=>a[c]=[0,0]);
+ const p=PRE[edn]||{};for(const[c,v]of Object.entries(p)){a[c][0]+=v[0];a[c][1]+=v[1]}
+ for(const g of S.games)if(g.ed===edn&&a[g.combo])a[g.combo][g.w==="T"?0:1]++;
+ return a}
 function renderDraw(){
  if(!draw)draw=roll();
  const chosen=draw.split("");
  $("#drawList").innerHTML=KEYS.map(k=>
-  `<div class="drawRow${chosen.includes(k)?" sel":""}"><div><div class="en">${EXT[k]} <span style="color:var(--mut)">(${k})</span></div><div class="prob">3 chances sur 5</div></div><div class="mark">${chosen.includes(k)?"✓":""}</div></div>`).join("");
+  `<div class="drawRow${chosen.includes(k)?" sel":""}"><div><div class="en"><span style="display:inline-block;vertical-align:middle;margin-right:5px">${SYM[k]}</span>${EXT[k]} <span style="color:var(--mut)">(${k})</span></div><div class="prob">3 chances sur 5</div></div><div class="mark">${chosen.includes(k)?"✓":""}</div></div>`).join("");
  const v=statsFor(ed,draw);
  let res;
  if(v[0]+v[1]===0)res="<span style='color:var(--acc)'>Première partie avec cette combinaison !</span>";
  else{const d=v[0]-v[1];
-  res=d===0?"<span class='zero'>Ils sont à égalité sur cette combinaison</span>":(d>0?`<span class='pT'>Typhaine mène (+${d})</span>`:`<span class='pF'>Floran mène (+${-d})</span>`)}
+  res=d===0?"<span class='zero'>Ils sont à égalité sur cette combinaison</span>":(d>0?"<span class='pT'>Typhaine mène</span>":"<span class='pF'>Floran mène</span>")}
  $("#comboStats").innerHTML=`<div class="big">${comboName(draw)}</div><div class="row"><span class="pT">Typhaine <b>${v[0]}</b></span><span class="pF">Floran <b>${v[1]}</b></span><span style="color:var(--mut)">Parties <b>${v[0]+v[1]}</b></span></div><div style="margin-top:8px;font-weight:700">${res}</div>`;
  $("#lastG").textContent=S.last[ed]?("Tirage différent de la partie précédente ("+comboName(S.last[ed])+")."):"Première partie dans cette édition."}
+function mCombo(){
+ const c=KEYS.filter(k=>mSel.has(k)).join("");
+ return COMBOS.includes(c)?c:null}
+function renderManual(){
+ $("#mChips").innerHTML=KEYS.map(k=>
+  `<button class="chip${mSel.has(k)?" on":""}" data-mk="${k}"><span style="display:inline-block;vertical-align:middle;margin-right:5px">${SYM[k]}</span>${EXT[k]}</button>`).join("");
+ document.querySelectorAll("#mChips .chip").forEach(b=>b.onclick=()=>{
+  const k=b.dataset.mk;
+  if(mSel.has(k))mSel.delete(k);else mSel.add(k);
+  renderManual()});
+ const c=mCombo();
+ $("#mComboName").textContent=c?("Combinaison : "+comboName(c)):"Aucune extension sélectionnée = jeu de base";
+}
+function saveManual(winner){
+ const c=mCombo();
+ S.games.push({ed:mEd,combo:c||"BASE",w:winner,d:Date.now()});
+ saveLocal();
+ toast((winner==="T"?"Typhaine":"Floran")+" +1 victoire ! ("+(c?comboName(c):"Jeu de base")+")");
+ mSel.clear();renderManual();refreshAll()}
+$("#mEdSeg").onclick=e=>{const b=e.target.closest("button");if(!b)return;mEd=b.dataset.v;
+ document.querySelectorAll("#mEdSeg button").forEach(x=>x.classList.toggle("on",x===b))};
+$("#mBtnT").onclick=()=>saveManual("T");
+$("#mBtnF").onclick=()=>saveManual("F");
 function record(winner){
  const c=draw||roll();
  S.games.push({ed,combo:c,w:winner,d:Date.now()});
  S.last[ed]=c;saveLocal();draw=null;
  toast((winner==="T"?"Typhaine":"Floran")+" +1 victoire ! ("+comboName(c)+")");
- renderDraw();renderStats()}
-function agg(edn){
- const a={};COMBOS.forEach(c=>a[c]=[0,0]);
- const p=PRE[edn]||{};for(const[c,v]of Object.entries(p)){a[c][0]+=v[0];a[c][1]+=v[1]}
- for(const g of S.games)if(g.ed===edn)a[g.combo][g.w==="T"?0:1]++;
- return a}
-function renderStats(){
- let t=0,f=0;
- for(const edn of["ultimate","vintage"]){const a=agg(edn);for(const c of COMBOS){t+=a[c][0];f+=a[c][1]}}
- $("#gT").textContent=t;$("#gF").textContent=f;
+ refreshAll()}
+function undoLast(){
+ if(!S.games.length)return;
+ const g=S.games[S.games.length-1];
+ S.games.pop();saveLocal();
+ toast("Partie annulée : "+(g.w==="T"?"Typhaine":"Floran")+" — "+comboName(g.combo));
+ refreshAll()}
+function delGame(d){
+ const i=S.games.findIndex(g=>g.d===d);
+ if(i<0)return;
+ const g=S.games[i];
+ S.games.splice(i,1);saveLocal();
+ toast("Partie supprimée : "+(g.w==="T"?"Typhaine":"Floran")+" — "+comboName(g.combo));
+ refreshAll()}
+function fixGame(d){
+ if(fixing===d){fixing=null}else{fixing=d}
+ renderHist()}
+function saveFix(){
+ if(fixing==null)return;
+ saveLocal();toast("Partie corrigée ✓");fixing=null;
+ refreshAll()}
+function renderHist(){
+ const list=S.games.slice().reverse();
+ if(!list.length){$("#histList").innerHTML="<div id='histEmpty'>Aucune partie saisie pour l'instant sur cet appareil. Les 792 parties du tableur historique sont déjà incluses dans les stats.</div>";$("#undo").disabled=true;return}
+ $("#undo").disabled=false;
+ $("#histList").innerHTML=list.map(g=>{
+  const dt=new Date(g.d);
+  const date=dt.toLocaleDateString("fr-FR")+" "+dt.toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"});
+  if(fixing===g.d){
+   return `<div class="hRow"><div class="hInfo"><div class="c">✏️ Correction d'une partie</div><div class="d">${EDN[g.ed]||g.ed} · ${g.combo==="BASE"?"Jeu de base":comboName(g.combo)} · ${date}</div></div><button class="del" data-d="${g.d}" title="Fermer la correction">✕</button></div>`
+   +`<div class="fixEd">${["ultimate","vintage"].map(e=>`<button class="${g.ed===e?"on":""}" data-fe="${e}">${EDN[e]}</button>`).join("")}</div>`
+   +`<div class="fixC">${COMBOS.map(c=>`<button class="${g.combo===c?"on":""}" data-fc="${c}">${c}</button>`).join("")}<button class="${g.combo==="BASE"?"on":""}" data-fc="BASE">Jeu de base</button></div>`
+   +`<div class="fixRow"><div class="q">Vainqueur :</div><button class="wT ${g.w==="T"?"on":""}" data-fw="T">● Typhaine</button><button class="wF ${g.w==="F"?"on":""}" data-fw="F">● Floran</button></div>`
+   +`<button class="ok" data-fok="1">✓ Enregistrer la correction</button>`}
+  return `<div class="hRow"><div class="hInfo"><div class="c"><span class="${g.w==="T"?"pT":"pF"}">● ${g.w==="T"?"Typhaine":"Floran"}</span> — ${EDN[g.ed]||g.ed} · ${g.combo==="BASE"?"Jeu de base":comboName(g.combo)}</div><div class="d">${date}</div></div><div class="btns"><button class="fix" data-fix="${g.d}" title="Corriger cette partie">✎</button><button class="del" data-d="${g.d}" title="Annuler cette partie">✕</button></div></div>`}).join("");
+ document.querySelectorAll("#histList .del").forEach(b=>b.onclick=()=>{const d=Number(b.dataset.d);if(fixing===d){fixing=null;renderHist()}else delGame(d)});
+ document.querySelectorAll("#histList .fix").forEach(b=>b.onclick=()=>fixGame(Number(b.dataset.fix)));
+ document.querySelectorAll("#histList [data-fw]").forEach(b=>b.onclick=()=>{
+  const i=S.games.findIndex(g=>g.d===fixing);if(i>=0)S.games[i].w=b.dataset.fw;renderHist()});
+ document.querySelectorAll("#histList [data-fe]").forEach(b=>b.onclick=()=>{
+  const i=S.games.findIndex(g=>g.d===fixing);if(i>=0)S.games[i].ed=b.dataset.fe;renderHist()});
+ document.querySelectorAll("#histList [data-fc]").forEach(b=>b.onclick=()=>{
+  const i=S.games.findIndex(g=>g.d===fixing);if(i>=0)S.games[i].combo=b.dataset.fc;renderHist()});
+ const ok=document.querySelector("#histList [data-fok]");if(ok)ok.onclick=saveFix}
+function pct(t){return Math.round(t/(t+(t===0?1:0))*100)||0}
+function pieRow(t,f){const s=t+f;if(!s)return"";const p=Math.round(t/s*100*10)/10;return `<span class="donut" style="background:conic-gradient(var(--t) 0 ${p}%,var(--f) ${p}% 100%)"></span>`}
+function leaderTxt(t,f){
  const d=t-f;
- $("#dT").textContent=d>0?("+"+d+" d'avance"):d<0?(d+" d'avance"):"Égalité parfaite";
- $("#dF").textContent=d<0?("+"+(-d)+" d'avance"):d>0?(d+" d'avance"):"Égalité parfaite";
- const onB=$("#edSeg2 .on"),edn=onB?onB.dataset.v:ed,a=agg(edn);
- let html="<table><tr><th>Combinaison</th><th class='pT'>Typh.</th><th class='pF'>Floran</th><th>Parties</th><th>Mène</th></tr>";
- let shown=0;
- for(const c of COMBOS){const v=a[c];if(v[0]+v[1]===0)continue;shown++;
-  const dd=v[0]-v[1];
-  const res=dd===0?"<span class='zero'>Égalité</span>":(dd>0?`<span class='win pT'>Typhaine (+${dd})</span>`:`<span class='win pF'>Floran (+${-dd})</span>`);
-  html+=`<tr><td>${comboName(c)}</td><td class='pT'>${v[0]}</td><td class='pF'>${v[1]}</td><td>${v[0]+v[1]}</td><td>${res}</td></tr>`}
+ return d===0?"<span class='zero'>Égalité</span>":(d>0?"<span class='win pT'>Typhaine</span>":"<span class='win pF'>Floran</span>")}
+const EXTCOL={A:"#9c27b0",C:"#d32f2f",E:"#1976d2",L:"#388e3c",I:"#757575"};
+function renderExtPie(){
+ const cnt={A:0,C:0,E:0,L:0,I:0};
+ const combos=[];
+ for(const[c,v]of Object.entries(PRE.ultimate||{}))combos.push([c,v[0]+v[1]]);
+ for(const g of S.games){const c=g.combo;if(c&&c!=="BASE")combos.push([c,1])}
+ let tot=0;
+ for(const[c,n]of combos){for(const k of c.split("")){cnt[k]+=n;tot+=n}}
+ if(!tot){$("#extPie").style.background="#b9a67d";$("#extLegend").innerHTML="";return}
+ let acc=0,parts=[],leg="";
+ for(const k of KEYS){
+  const p=cnt[k]/tot*100;
+  parts.push(`${EXTCOL[k]} ${acc}% ${acc+p}%`);
+  leg+=`<div class="li"><span class="sq" style="background:${EXTCOL[k]}"></span>${EXT[k]} · ${Math.round(p)}%</div>`;
+  acc+=p}
+ $("#extPie").style.background=`conic-gradient(${parts.join(",")})`;
+ $("#extLegend").innerHTML=leg}
+function renderCurve(){
+ // Base historique (tableur) puis chaque partie notée dans l'app
+ let t0=0,f0=0;
+ for(const edn of ["ultimate","vintage"])for(const[c,v]of Object.entries(PRE[edn]||{})){t0+=v[0];f0+=v[1]}
+ const gs=S.games.slice().sort((a,b)=>a.d-b.d);
+ const pts=[{x:0,t:t0,f:f0}];
+ let t=t0,f=f0;
+ for(const g of gs){if(g.w==="T")t++;else f++;pts.push({x:pts.length,t,f})}
+ const W=340,H=200,L=34,R=8,T=10,B=22;
+ const n=pts[pts.length-1].x;
+ const minV=Math.min(370,t0,f0,t,f)-2;
+ const maxV=Math.max(t0,f0,t,f)+2;
+ const X=i=>L+(i/Math.max(1,n))*(W-L-R);
+ const Y=v=>H-B-((v-minV)/(maxV-minV))*(H-B-T);
+ let grid="";
+ for(let v=Math.ceil(minV/5)*5;v<=maxV;v+=5){grid+=`<line x1="${L}" y1="${Y(v)}" x2="${W-R}" y2="${Y(v)}" stroke="#d8cbab" stroke-width="1"/><text x="${L-5}" y="${Y(v)+3}" font-size="9" fill="#7a6a52" text-anchor="end">${v}</text>`}
+ const line=(key,col)=>{
+  const d=pts.map((p,i)=>(i?"L":"M")+X(p.x).toFixed(1)+" "+Y(p[key]).toFixed(1)).join(" ");
+  return `<path d="${d}" fill="none" stroke="${col}" stroke-width="2.5" stroke-linejoin="round"/>`};
+ const area=(key,col)=>{
+  if(pts.length<2)return "";
+  const d=pts.map((p,i)=>(i?"L":"M")+X(p.x).toFixed(1)+" "+Y(p[key]).toFixed(1)).join(" ");
+  return `<path d="${d} L${X(pts[pts.length-1].x).toFixed(1)} ${Y(minV)} L${X(0)} ${Y(minV)} Z" fill="${col}" opacity="0.10"/>`};
+ $("#curveSvgWrap").innerHTML=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block">${grid}
+  <line x1="${L}" y1="${H-B}" x2="${W-R}" y2="${H-B}" stroke="#b9a67d" stroke-width="1.5"/>
+  ${area("t","#d5387f")}${area("f","#2f6fd8")}
+  ${line("t","#d5387f")}${line("f","#2f6fd8")}
+  <circle cx="${X(0)}" cy="${Y(t0)}" r="4" fill="#d5387f"/><circle cx="${X(0)}" cy="${Y(f0)}" r="4" fill="#2f6fd8"/>
+  ${pts.slice(1).map(p=>`<circle cx="${X(p.x).toFixed(1)}" cy="${Y(p.t).toFixed(1)}" r="2.6" fill="#d5387f"/>`).join("")}
+  ${pts.slice(1).map(p=>`<circle cx="${X(p.x).toFixed(1)}" cy="${Y(p.f).toFixed(1)}" r="2.6" fill="#2f6fd8"/>`).join("")}
+ </svg>`;
+ $("#curveNote").textContent=gs.length?("Départ = historique du tableur ("+t0+" / "+f0+"), puis chaque partie enregistrée (•). Chaque courbe monte quand son joueur gagne."):"Départ = historique du tableur ("+t0+" / "+f0+"). La courbe évoluera à chaque nouvelle partie enregistrée."}
+function renderStats(){
+ const au=agg("ultimate"),av=agg("vintage");
+ const bb=baseCount();
+ let gT=bb[0],gF=bb[1];
+ for(const c of COMBOS){gT+=au[c][0]+av[c][0];gF+=au[c][1]+av[c][1]}
+ $("#gT").textContent=gT;$("#gF").textContent=gF;
+ const d=gT-gF;
+ const n=gT+gF;
+ $("#dT").textContent=n+" parties";
+ $("#dF").textContent=n+" parties";
+ let html="<table><tr><th rowspan=\"2\">Combinaison</th><th colspan=\"2\">Ultimate</th><th colspan=\"2\">Vintage</th><th rowspan=\"2\">Parties</th><th rowspan=\"2\">Mène</th><th rowspan=\"2\">Proportion</th></tr><tr><th class='pT'>Typhaine</th><th class='pF'>Floran</th><th class='pT'>Typhaine</th><th class='pF'>Floran</th></tr>";
+ let shown=0,tu=0,fu=0,tv=0,fv=0;
+ for(const c of COMBOS){const u=au[c],v=av[c];
+  if(u[0]+u[1]+v[0]+v[1]===0)continue;shown++;
+  tu+=u[0];fu+=u[1];tv+=v[0];fv+=v[1];
+  const t=u[0]+v[0],f=u[1]+v[1];
+  html+=`<tr><td>${comboName(c)}</td><td class='pT'>${u[0]||"<span class='zero'>–</span>"}</td><td class='pF'>${u[1]||"<span class='zero'>–</span>"}</td><td class='pT'>${v[0]||"<span class='zero'>–</span>"}</td><td class='pF'>${v[1]||"<span class='zero'>–</span>"}</td><td>${t+f}</td><td>${leaderTxt(t,f)}</td><td>${pieRow(t,f)}</td></tr>`}
+ if(shown){
+  const t=tu+tv,f=fu+fv;
+  html+=`<tr class="totalRow"><td style="border-top:2px solid #b9a67d">TOTAL</td><td class='pT'>${tu}</td><td class='pF'>${fu}</td><td class='pT'>${tv}</td><td class='pF'>${fv}</td><td>${t+f}</td><td>${leaderTxt(t,f)}</td><td>${pieRow(t,f)}</td></tr>`}
  html+="</table>";
- $("#tableWrap").innerHTML=shown?html:"<div class='card' style='text-align:center;color:var(--mut)'>Aucune partie dans cette édition.</div>"}
+ $("#tableWrap").innerHTML=shown?html:"<div class='card' style='text-align:center;color:var(--mut)'>Aucune partie.</div>"}
 function showTab(id){
  ["play","stats","io"].forEach(x=>$("#"+x).classList.toggle("hidden",x!==id));
  ["tabPlay","tabStats","tabIO"].forEach(x=>$("#"+x).classList.remove("on"));
  $({play:"#tabPlay",stats:"#tabStats",io:"#tabIO"}[id]).classList.add("on");
- if(id==="stats")renderStats()}
+ if(id==="stats"){renderStats();renderCurve()}}
 $("#tabPlay").onclick=()=>showTab("play");
 $("#tabStats").onclick=()=>showTab("stats");
 $("#tabIO").onclick=()=>showTab("io");
 $("#edSeg").onclick=e=>{const b=e.target.closest("button");if(!b)return;ed=b.dataset.v;
  document.querySelectorAll("#edSeg button").forEach(x=>x.classList.toggle("on",x===b));draw=null;renderDraw()};
-$("#edSeg2").onclick=e=>{const b=e.target.closest("button");if(!b)return;
- document.querySelectorAll("#edSeg2 button").forEach(x=>x.classList.toggle("on",x===b));renderStats()};
 $("#redraw").onclick=()=>{draw=null;renderDraw()};
 $("#btnT").onclick=()=>record("T");
 $("#btnF").onclick=()=>record("F");
+$("#undo").onclick=undoLast;
 $("#btnExport").onclick=()=>{
  const blob=new Blob([JSON.stringify(S)],{type:"application/json"});
  const a=document.createElement("a");
@@ -222,12 +450,29 @@ $("#fileInput").onchange=e=>{
    for(const g of d.games){const id=g.d+"|"+g.ed+"|"+g.combo+"|"+g.w;
     if(!ids.has(id)){S.games.push(g);ids.add(id);added++}}
    if(d.last)for(const k of Object.keys(d.last))if(!S.last[k])S.last[k]=d.last[k];
-   saveLocal();renderDraw();renderStats();
+   saveLocal();refreshAll();
    $("#ioMsg").textContent=added?("✓ Fusion réussie : "+added+" partie(s) ajoutée(s)."):"✓ Déjà à jour : aucune nouvelle partie."}
   catch(err){$("#ioMsg").textContent="✗ Fichier invalide."}};
  r.readAsText(file);
  e.target.value=""};
-renderDraw();renderStats();
+document.querySelectorAll(".icons .sym").forEach(el=>{el.innerHTML=SYMB[el.className.split("sym-")[1]]||""});
+renderDraw();renderStats();renderHist();renderManual();renderExtPie();renderCurve();
+function refreshAll(){renderDraw();renderStats();renderHist();renderExtPie();renderCurve()}
 </script>
+<script>
+(function(){
+ var CODE="innovation791";
+ var K="innovation-gate-ok";
+ if(localStorage.getItem(K)==="1"){var g=document.getElementById("gate");if(g)g.remove();return}
+ function tryCode(){
+  var v=document.getElementById("gateIn").value;
+  if(v===CODE){localStorage.setItem(K,"1");document.getElementById("gate").remove()}
+  else{document.getElementById("gateErr").textContent="✗ Code incorrect";document.getElementById("gateIn").value=""}
+ }
+ document.getElementById("gateBtn").onclick=tryCode;
+ document.getElementById("gateIn").addEventListener("keydown",function(e){if(e.key==="Enter")tryCode()});
+})();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4bc70e2c01a94c73b74392e4234840661791215815920" integrity="sha512-L0ha0OXavK/8okipN9F8BtP84dg9DUhPERbBXzwI6dgTA55d2+yweo3pn5CSFYs45/r8md2+xvUPtTdvTNRfjA==" nonce="gUYf+rc4OAppYBsx8ZfrJA==" data-cf-beacon='{"version":"2024.11.0","token":"36b4216ae2dc4d5488c249161e71fe1e","spa":2}' crossorigin="anonymous"></script>
 </body>
 </html>
