@@ -286,13 +286,13 @@ function syncMsg(m){const el=$("#syncStatus");if(el)el.textContent=m}
 function ghHeaders(json){const hd={};if(ghToken())hd.Authorization="Bearer "+ghToken();if(json)hd.Accept="application/vnd.github+json";return hd}
 async function pullRemote(quiet){
  try{
-  const r=await fetch("https://raw.githubusercontent.com/"+GH_OWNER+"/"+GH_REPO+"/main/"+GH_FILE+"?t="+Date.now(),{headers:ghHeaders(false),cache:"no-store"});
+  const r=await fetch("https://raw.githubusercontent.com/"+GH_OWNER+"/"+GH_REPO+"/main/"+GH_FILE+"?t="+Date.now(),{cache:"no-store"});
   if(!r.ok){if(!quiet)syncMsg("Aucune sauvegarde en ligne pour l'instant — elle sera créée à la première partie enregistrée.");return}
   const d=await r.json();
   const added=mergeRemote(d);
   if(added){refreshAll();syncMsg("✓ "+added+" partie(s) récupérée(s) depuis GitHub.")}
   else if(!quiet)syncMsg("✓ Déjà à jour avec GitHub.")
- }catch(e){if(!quiet)syncMsg("✗ Connexion impossible (hors ligne ?) — vos scores restent enregistrés localement.")}}
+ }catch(e){syncMsg("✗ Récupération impossible : "+(e&&e.message?e.message:e)+" — vos scores restent enregistrés localement.")}}
 async function putRemote(sha){
  const body=JSON.stringify(S);
  const bytes=new TextEncoder().encode(body);
@@ -584,6 +584,6 @@ function refreshAll(){renderDraw();renderStats();renderHist();renderExtPie();ren
  document.getElementById("gateIn").addEventListener("keydown",function(e){if(e.key==="Enter")tryCode()});
 })();
 </script>
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4bc70e2c01a94c73b74392e4234840661791215815920" integrity="sha512-L0ha0OXavK/8okipN9F8BtP84dg9DUhPERbBXzwI6dgTA55d2+yweo3pn5CSFYs45/r8md2+xvUPtTdvTNRfjA==" nonce="otf9KnOkFBtSh8jBderXtQ==" data-cf-beacon='{"version":"2024.11.0","token":"36b4216ae2dc4d5488c249161e71fe1e","spa":2}' crossorigin="anonymous"></script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4bc70e2c01a94c73b74392e4234840661791215815920" integrity="sha512-L0ha0OXavK/8okipN9F8BtP84dg9DUhPERbBXzwI6dgTA55d2+yweo3pn5CSFYs45/r8md2+xvUPtTdvTNRfjA==" nonce="MddX4mB3DEioKLdg6VJI+A==" data-cf-beacon='{"version":"2024.11.0","token":"36b4216ae2dc4d5488c249161e71fe1e","spa":2}' crossorigin="anonymous"></script>
 </body>
 </html>
